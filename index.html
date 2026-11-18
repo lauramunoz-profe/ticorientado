@@ -1,359 +1,169 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Muestra Anual 2026 · 5to TIC</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --ink:#070b14;
-    --surface:#101830;
-    --surface-2:#151f3d;
-    --line:rgba(148,163,209,0.16);
-    --text:#e8edfb;
-    --muted:#8b96b8;
-    --teal:#5eead4;
-    --indigo:#8b8ef2;
-    --amber:#f6c177;
-    --rose:#f43f5e;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  html{scroll-behavior:smooth;}
-  body{
-    background:var(--ink);
-    color:var(--text);
-    font-family:'Inter',sans-serif;
-    line-height:1.5;
-    overflow-x:hidden;
-  }
-  h1,h2,h3,.brand,.count{font-family:'Space Grotesk',sans-serif;}
-  .mono{font-family:'JetBrains Mono',monospace;}
-
-  /* ---------- Fondo animado ---------- */
-  .field{
-    position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none;
-  }
-  .field::before{
-    content:"";
-    position:absolute; inset:-10%;
-    background-image:
-      linear-gradient(var(--line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--line) 1px, transparent 1px);
-    background-size:56px 56px;
-    animation:drift 34s linear infinite;
-    opacity:.5;
-  }
-  @keyframes drift{
-    from{transform:translate(0,0);}
-    to{transform:translate(56px,56px);}
-  }
-  .orb{
-    position:absolute; border-radius:50%; filter:blur(90px); opacity:.35;
-    animation:float 22s ease-in-out infinite;
-  }
-  .orb.o1{width:480px;height:480px; background:var(--teal); top:-140px; left:-120px; animation-duration:26s;}
-  .orb.o2{width:420px;height:420px; background:var(--indigo); bottom:-160px; right:-100px; animation-duration:30s; animation-delay:-6s;}
-  .orb.o3{width:300px;height:300px; background:var(--amber); top:40%; left:60%; animation-duration:20s; animation-delay:-12s; opacity:.18;}
-  @keyframes float{
-    0%,100%{transform:translate(0,0) scale(1);}
-    50%{transform:translate(40px,-30px) scale(1.08);}
-  }
-  @media (prefers-reduced-motion: reduce){
-    .field::before, .orb{animation:none;}
-  }
-
-  /* ---------- Nav ---------- */
-  nav{
-    position:sticky; top:0; z-index:20;
-    display:flex; align-items:center; gap:1.2rem;
-    padding:1rem clamp(1.2rem,4vw,3rem);
-    background:rgba(7,11,20,0.85);
-    backdrop-filter:blur(14px);
-    border-bottom:1px solid var(--line);
-  }
-  .brand{font-size:1.05rem; font-weight:700; letter-spacing:.01em; white-space:nowrap; cursor:pointer;}
-  .brand span{color:var(--teal);}
-  .nav-links{display:flex; gap:0.8rem; margin-right:auto; font-size:.92rem;}
-  .nav-links a{
-    color:var(--muted); text-decoration:none; transition:color .2s, border-color .2s;
-    padding:.4rem .7rem; border-radius:6px; border:1px solid transparent;
-  }
-  .nav-links a:hover, .nav-links a.active{
-    color:var(--text); background:rgba(255,255,255,0.04); border-color:var(--line);
-  }
-  .nav-links a.active{ color:var(--teal); font-weight:600; }
-  
-  .search-wrap{
-    display:flex; align-items:center; gap:.5rem;
-    background:var(--surface); border:1px solid var(--line); border-radius:10px;
-    padding:.5rem .8rem; min-width:220px;
-  }
-  .search-wrap svg{flex-shrink:0; opacity:.6;}
-  #search{
-    background:transparent; border:0; outline:0; color:var(--text);
-    font-family:inherit; font-size:.88rem; width:100%;
-  }
-  #search::placeholder{color:var(--muted);}
-  @media (max-width:850px){
-    .nav-links{display:none;}
-    .search-wrap{min-width:140px;}
-  }
-
-  /* ---------- Hero ---------- */
-  header{
-    position:relative; z-index:1;
-    max-width:820px; margin:0 auto; text-align:center;
-    padding:5rem 1.4rem 3rem;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-  }
-
-  .badge{
-    display:inline-flex; align-items:center; gap:.5rem;
-    font-family:'JetBrains Mono',monospace; font-size:.78rem; color:var(--teal);
-    border:1px solid rgba(94,234,212,.35); background:rgba(94,234,212,.08);
-    padding:.4rem .9rem; border-radius:100px; margin-bottom:1.4rem;
-  }
-  .badge::before{content:""; width:6px; height:6px; border-radius:50%; background:var(--teal); box-shadow:0 0 8px var(--teal);}
-  
-  .hero-buttons{
-    display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; margin-top:2rem;
-  }
-
-  .cta{
-    display:inline-flex; align-items:center; gap:.5rem;
-    padding:.85rem 1.5rem; border-radius:10px; font-size:.95rem; font-weight:600;
-    color:var(--ink); background:var(--teal); text-decoration:none; cursor:pointer; border:0;
-    font-family:inherit; transition:transform .2s, gap .2s, background-color .2s;
-  }
-  .cta:hover{gap:.75rem; transform:translateY(-2px); background:#8cf4e2;}
-  
-  .cta-sec{
-    background:var(--surface-2); color:var(--text); border:1px solid var(--line);
-  }
-  .cta-sec:hover{ background:var(--surface); color:var(--teal); }
-
-  header h1{
-    font-size:clamp(2.1rem,5vw,3.2rem); font-weight:700; line-height:1.15;
-    letter-spacing:-0.01em; margin-bottom:1rem;
-  }
-  header h1 em{font-style:normal; color:var(--teal);}
-  header p{color:var(--muted); font-size:1.05rem; max-width:620px; margin:0 auto;}
-
-  /* ---------- Grid & Secciones ---------- */
-  main{position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:2rem 1.4rem 5rem;}
-  
-  .section-header{
-    margin-bottom:2rem;
-    display:flex; flex-direction:column; gap:.5rem;
-  }
-  .section-title{ font-size:1.8rem; font-weight:700; letter-spacing:-.02em; color:var(--text); }
-  .section-desc{ color:var(--muted); font-size:.95rem; max-width:700px; }
-
-  .result-count{
-    color:var(--muted); font-size:.85rem; margin-bottom:1.2rem;
-  }
-  .result-count b{color:var(--text);}
-  
-  .grid{
-    display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.3rem;
-  }
-  
-  .card{
-    background:var(--surface);
-    border:1px solid var(--line);
-    border-radius:14px;
-    padding:1.5rem;
-    display:flex; flex-direction:column; justify-content:space-between;
-    transition:transform .45s cubic-bezier(.2,.8,.2,1), border-color .25s, box-shadow .25s;
-  }
-  .card:hover{
-    border-color:rgba(94,234,212,.4);
-    box-shadow:0 0 0 1px rgba(94,234,212,.15), 0 20px 40px -20px rgba(0,0,0,.6);
-  }
-  
-  .card-tag{
-    display:inline-block; font-size:.7rem; font-family:'JetBrains Mono',monospace;
-    text-transform:uppercase; padding:.2rem .5rem; border-radius:4px; margin-bottom:.8rem;
-    background:rgba(139,142,242,0.12); color:var(--indigo); border:1px solid rgba(139,142,242,0.25);
-  }
-
-  .card-title{font-size:1.25rem; font-weight:600; margin-bottom:.8rem; letter-spacing:-.01em;}
-
-  .integrantes-label{
-    font-size:.72rem; color:var(--muted); font-family:'JetBrains Mono',monospace;
-    margin-bottom:.5rem; display:flex; align-items:center; gap:.4rem;
-  }
-  .integrantes-label svg{opacity:.7;}
-  .integrantes-list{font-size:.88rem; color:#c3cbe6; margin-bottom:1.4rem;}
-  .integrantes-list .who{color:var(--text); font-weight:500;}
-
-  .btn{
-    display:inline-flex; align-items:center; justify-content:center; gap:.4rem;
-    padding:.65rem 1rem; border-radius:9px; font-size:.88rem; font-weight:600;
-    text-decoration:none; color:var(--ink); background:var(--teal);
-    transition:transform .2s, background .2s, gap .2s; width:100%; border:0; cursor:pointer;
-  }
-  .btn:hover{background:#8cf4e2; gap:.6rem;}
-
-  .empty{
-    display:none; text-align:center; color:var(--muted); padding:3rem 1rem; font-size:.95rem;
-  }
-  .empty.show{display:block;}
-
-  footer{
-    position:relative; z-index:1; text-align:center; color:var(--muted);
-    font-size:.82rem; padding:2rem 1rem 3rem; border-top:1px solid var(--line);
-    margin-top:4rem;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071426">
+  <meta name="description" content="Un mensaje especial para la promoción de 5.º año de Bachiller en TIC Orientado - Instituto Nuestra Señora de Fátima.">
+  <title>Promoción 5.º Año | TIC ORIENTADO</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="scanline" aria-hidden="true"></div>
 
-  <div class="field">
-    <div class="orb o1"></div>
-    <div class="orb o2"></div>
-    <div class="orb o3"></div>
-  </div>
-
-  <nav>
-    <div class="brand" onclick="window.location.href='index.html'">5to<span>TIC</span></div>
-   
-  </nav>
-
-  
-  <!-- Container Principal -->
   <main>
-    <section>
-      <div class="section-header">
-        <h2 class="section-title">Proyecto Robótica 2026</h2>
-       
+    <section class="intro screen active" id="intro">
+      <div class="terminal">
+        <div class="terminal-top"><span></span><span></span><span></span><small>TIC_ORIENTADO_5TO.exe</small></div>
+        <p class="muted">C:\PROMOCION_5TO&gt; iniciar_despedida</p>
+        <h1 class="boot-title">GENERANDO PROYECTO_<span class="cursor">_</span></h1>
+        <div class="progress"><span id="progressBar"></span></div>
+        <p id="bootStatus" class="boot-status">Cargando IA, diseño y podcast...</p>
+        <button id="startBtn" class="button primary" disabled>INGRESAR AL ESTUDIO <span>→</span></button>
       </div>
-
-
-      <div class="grid" id="cards-grid">
-        <!-- Grupo 1 -->
-        <div class="card" data-name="grupo 1 sensor de luz robotica LDR fotorresistor arduino tobias benitez moira bogado martina lopez bianca lozano magali romero kiara toledo">
-          <div>
-            
-            <div class="card-title">Grupo 1 - Sensor de LUZ</div>
-            <div class="integrantes-label">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              integrantes
-            </div>
-            <div class="integrantes-list">
-              <span class="who">Tobias Benitez, Moira Bogado, Martina Lopez, Bianca Lozano, Magali Romero, Kiara Toledo, Alexis Ferreira</span>
-            </div>
-          </div>
-          <a href="juegos.html?grupo=1" class="btn">Jugar  🎮</a>
-        </div>
-
-        <!-- Grupo 2 -->
-        <div class="card" data-name="grupo 2 sensor alarmas seguridad buzzer infrarrojo arduino melisa bautista juan vidale angelo huarachi matias huayta ayelen quispe alexander vasquez melody vergaray nahuel villarrubia">
-          <div>
-            
-            <div class="card-title">Grupo 2 - Sensor ALARMAS</div>
-            <div class="integrantes-label">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              integrantes
-            </div>
-            <div class="integrantes-list">
-              <span class="who">Melisa Yujra, Emily canaviri, Juan Quispe, Angelo Cipe, Matias HUAYTA, Ayelen Quispe, Alexander Riera, Melody Vergaray, Nahuel Ortega</span>
-            </div>
-          </div>
-          <a href="juegos.html?grupo=2" class="btn">Jugar  🎮</a>
-        </div>
-
-        <!-- Grupo 3 -->
-        <div class="card" data-name="grupo 3 sensor temperatura lm35 dht11 termometro arduino micaela encinas matias fernandez andrea guarachi angelina huacara jennifer mayta cristina salazar damian vega">
-          <div>
-           
-            <div class="card-title">Grupo 3 - Sensor Temperatura</div>
-            <div class="integrantes-label">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              integrantes
-            </div>
-            <div class="integrantes-list">
-              <span class="who">Micaela Onofre, Matias Fernandez, Andrea Guarachi, Angelina Gonzales, Jennifer Mayta, Cristina Salazar, Damian Vega</span>
-            </div>
-          </div>
-          <a href="juegos.html?grupo=3" class="btn">Jugar 🎮</a>
-        </div>
-
-        <!-- Grupo 4 -->
-        <div class="card" data-name="grupo 4 sensor de humedad riego tierra dht11 arduino dylan hidalgo santiago juarez owen rojas tiago santillan axel tapia ezequiel torrejon">
-          <div>
-            
-            <div class="card-title">Grupo 4 - Sensor de Humedad</div>
-            <div class="integrantes-label">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              integrantes
-            </div>
-            <div class="integrantes-list">
-              <span class="who">Dylan Tapia, Santiago Juarez, Owen Rojas, Tiago Santillan, Axel Juaniquina, Ezequiel Torrejon </span>
-            </div>
-          </div>
-          
-        </div>
-
-        <!-- Grupo 5 -->
-        <div class="card" data-name="grupo 5 sensor de movimiento pir presencia infrarrojo arduino alejandra berrios nuriel nogales ayelen oropeza">
-          <div>
-          
-            <div class="card-title">Grupo 5 - Sensor De Movimiento</div>
-            <div class="integrantes-label">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              integrantes
-            </div>
-            <div class="integrantes-list">
-              <span class="who">Alejandra Berrios, Nuriel Nogales, Ayelen Oropeza </span>
-            </div>
-          </div>
-          <a href="juegos.html?grupo=5" class="btn">Jugar  🎮</a>
-        </div>
-
-        <!-- Grupo 6 -->
-        <div class="card" data-name="grupo 6 pantalla led display lcd matriz arduino serena figueroa damaris huallpa julieta zambrana">
-          <div>
-            
-            <div class="card-title">Grupo 6 - Pantalla LED</div>
-            <div class="integrantes-label">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              integrantes
-            </div>
-            <div class="integrantes-list">
-              <span class="who">Serena Figueroa, Damaris Vargas, Julieta  Zambrana</span>
-            </div>
-          </div>
-          
-        </div>
-      </div>
+      <p class="intro-foot">INSTITUTO NUESTRA SEÑORA DE FÁTIMA · BACHILLER EN INFORMÁTICA</p>
     </section>
 
+    <section class="screen content-screen" id="mainContent" aria-hidden="true">
+      <header class="topline">
+        <span>INSTITUTO NUESTRA SEÑORA DE FÁTIMA // 5.º AÑO</span>
+        <span class="online"><i></i> PROMOCIÓN 2026</span>
+      </header>
+
+      <div class="letter-layout" id="letterLayout">
+        <section class="letter panel" id="letterPanel">
+          <div class="panel-heading"><span class="tiny-icon">✦</span> MENSAJE DE DESPEDIDA <span class="line"></span></div>
+          <h2>Queridos estudiantes de 5.º año:</h2>
+          <div id="letterText" class="letter-text">
+            <p>Hoy no estamos cerrando solamente una materia ni terminando un ciclo escolar más. Hoy, en su último día, están cerrando una de las etapas más importantes de sus vidas: el fin de su camino en el secundario.</p>
+            <p>Durante este recorrido, en TIC Orientado, aprendimos a comunicar, crear y potenciar nuestras ideas. A través de herramientas de Inteligencia Artificial, diseños en Canva, producción de podcasts —y hasta dando nuestros primeros pasos en diseño 3D y circuitos—, descubrimos que la tecnología cobra verdadero valor cuando se combina con la creatividad, la voz propia y el criterio personal.</p>
+            <p>Y creo que la vida se parece mucho a eso.</p>
+            <p>No todo va a salir perfecto en el primer borrador. Habrá diseños que necesiten ajustarse, grabaciones que haya que volver a intentar, prompts que no den el resultado esperado a la primera y momentos en los que sentirán que algo no sale como querían. Pero recuerden siempre algo: una toma fallida o un error no significa que todo esté perdido; es la oportunidad de editar, cambiar el enfoque y volver a crear.</p>
+            <p>Hoy dejan de ser estudiantes del colegio secundario. Se llevan conocimientos, experiencias, amistades y herramientas digitales y humanas que podrán utilizar en cualquier camino que elijan emprender.</p>
+            <p>No dejen nunca de aprender, de preguntar, de diseñar, de usar su propia voz y de animarse a darle forma a sus propias ideas.</p>
+            <p>Les deseo que puedan construir un futuro del que se sientan profundamente orgullosos. Y recuerden que el proyecto más importante que tienen por delante es su propia vida.</p>
+            <p class="closing-line">¡Felicitaciones, egresados de 5.º año, Promoción 2026! Que esta nueva etapa fuera del colegio sea su mejor versión hasta ahora.</p>
+            <p class="signature" id="letterEnd">Con mucho cariño,<br><strong>Prof. Muñoz Laura</strong><br><span>TIC Orientado</span></p>
+          </div>
+        </section>
+
+        <aside class="side-action" id="sideAction" hidden>
+          <div class="side-card unlocked-card" id="diplomaTriggerBox">
+            <span class="badge-ready">● RECUERDO DESBLOQUEADO</span>
+            <h3>Tu Diploma de 5.º Año</h3>
+            <p>Personalizalo con tu nombre y descargalo en imagen a todo color.</p>
+            <button class="button primary full-btn" id="openModalBtn">VER DIPLOMA <span>✦</span></button>
+          </div>
+        </aside>
+      </div>
+
+      <footer>TIC ORIENTADO <span>•</span> INSTITUTO NUESTRA SEÑORA DE FÁTIMA <span>•</span> PROMOCIÓN 2026</footer>
+    </section>
   </main>
 
-  <footer>5to TIC Orientado · Expo 2026</footer>
+  <!-- MODAL DEL DIPLOMA -->
+  <div class="modal-overlay" id="diplomaModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+      <button class="modal-close" id="closeModalBtn" aria-label="Cerrar diploma">✕</button>
 
-<script>
-  const inputSearch = document.getElementById('search');
-  const cards = document.querySelectorAll('.card');
-  const countVal = document.getElementById('count-val');
-  const emptyEl = document.getElementById('empty');
+      <div class="student-input-box">
+        <label for="studentNameInput">Escribí tu nombre y apellido para el diploma:</label>
+        <input type="text" id="studentNameInput" placeholder="Ej: Juan Pérez" maxlength="45" autocomplete="off">
+      </div>
 
-  inputSearch.addEventListener('input', () => {
-    const query = inputSearch.value.trim().toLowerCase();
-    let visibleCount = 0;
+      <div class="diploma-scroll-wrapper">
+        <article class="diploma tech-diploma" id="diploma">
+          <div class="diploma-ide-bar">
+            <div class="ide-dots">
+              <span class="dot-red"></span>
+              <span class="dot-yellow"></span>
+              <span class="dot-green"></span>
+            </div>
+            <span class="ide-title">~/tic-orientado/egresado_2026.studio</span>
+          </div>
 
-    cards.forEach(card => {
-      const match = card.dataset.name.toLowerCase().includes(query);
-      card.style.display = match ? '' : 'none';
-      if(match) visibleCount++;
-    });
+          <div class="diploma-inner">
+            <img src="graduacion.jpg" alt="" class="diploma-watermark" aria-hidden="true">
 
-    countVal.textContent = visibleCount;
-    emptyEl.classList.toggle('show', visibleCount === 0);
-  });
-</script>
+            <header class="diploma-header">
+              <div class="logo-frame">
+                <img src="logo.png" alt="Escudo Instituto Nuestra Señora de Fátima" class="school-logo">
+              </div>
+              <div class="school-info">
+                <span class="school-name">INSTITUTO NUESTRA SEÑORA DE FÁTIMA</span>
+                <span class="school-sub">5.º AÑO · BACHILLER EN INFORMÁTICA · BUENOS AIRES</span>
+              </div>
+              <div class="tech-badge">
+                <img src="graduacion.jpg" alt="Graduación Bachiller TIC Orientado">
+              </div>
+            </header>
+
+            <div class="diploma-hero">
+              <span class="build-badge">✔ PRODUCCIÓN FINALIZADA · CICLO LECTIVO 2026</span>
+              <h2>CERTIFICADO DE CREACIÓN Y EGRESO FINAL</h2>
+            </div>
+
+            <div class="student-terminal-box">
+              <span class="terminal-prompt">&gt; creator --certified-name:</span>
+              <div class="student-name-display" id="studentNameDisplay">Egresado/a de la Promoción 2026</div>
+            </div>
+
+            <p class="diploma-copy">
+              Por haber imaginado, diseñado, producido y comunicado con éxito cada proyecto de 
+              <strong>TIC Orientado</strong> —integrando Inteligencia Artificial, diseño en Canva, podcast y nuevas tecnologías—, 
+              demostrando que la creatividad y la voz propia son la base para proyectar su mejor versión.
+            </p>
+
+            <div class="diploma-status">
+              <div class="status-card">
+                <small>ESTADO DEL PROYECTO</small>
+                <strong>PUBLICADO (100%)</strong>
+              </div>
+              <div class="status-divider">⚡</div>
+              <div class="status-card">
+                <small>HERRAMIENTAS DOMINADAS</small>
+                <strong>IA · CANVA · PODCAST</strong>
+              </div>
+              <div class="status-divider">⚡</div>
+              <div class="status-card">
+                <small>PRÓXIMO EPISODIO</small>
+                <strong>UN NUEVO COMIENZO</strong>
+              </div>
+            </div>
+
+            <div class="diploma-signatures">
+              <div class="sig-block">
+                <div class="sig-date">Prof. Muñoz Laura</div>
+                <div class="sig-line"></div>
+                <strong>Docente</strong>
+                <span>TIC Orientado</span>
+              </div>
+
+              <div class="official-seal">
+                <span>PROMOCIÓN</span>
+                <strong>2026</strong>
+                <span>5.º BACHILLER</span>
+              </div>
+
+              <div class="sig-block">
+                <div class="sig-date">18 de noviembre de 2026</div>
+                <div class="sig-line"></div>
+                <strong>Fecha</strong>
+                <span>CABA, Argentina</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="modal-actions">
+        <button class="button primary" id="downloadImgBtn">⤓ DESCARGAR DIPLOMA (IMAGEN PNG)</button>
+        <p class="print-note" id="downloadStatus">Se descargará a todo color lista para guardar o compartir.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
